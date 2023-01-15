@@ -5,7 +5,6 @@ import 'package:mvvm_template/core/services/device_info_service.dart';
 import 'package:mvvm_template/core/services/notification_service.dart';
 import 'package:mvvm_template/locator.dart';
 
-///
 /// [FireAuth] class contains all authentication related logic with following
 /// methods:
 ///
@@ -25,8 +24,6 @@ import 'package:mvvm_template/locator.dart';
 /// [resetPassword]: This method is used for resetting the current user's password
 ///
 /// [deleteAccount]: This method is used for deleting the account and info of current user
-///
-
 class FireAuth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   String? fcmToken;
@@ -36,27 +33,23 @@ class FireAuth {
   FirebaseAuth get firebaseAuth => _firebaseAuth;
   User? get currentUser => _firebaseAuth.currentUser;
 
-  ///
-  /// Updating FCM Token here...
-  ///
+  /// Updates the fcm token
   _updateFcmToken() async {
     final fcmToken = await locator<NotificationsService>().getFcmToken();
     final deviceId = await DeviceInfoService().getDeviceId();
     //TODO update fcm in database
   }
 
+  ///Signs out the current user.
   Future<void> signOut() async {
     //TODO clear fcm token
     return _firebaseAuth.signOut();
   }
 
+  /// Tries to create a new user account with the given email address and password.
   ///
-  /// [createUserWithEmailAndPassword] Function parameters:
-  ///   1) email --> Required
-  ///   2) password --> Required
-  ///   3) sendVarificationMail --> Optional(false by default)
-  ///
-
+  /// Other parameters include:
+  ///   1) sendVarificationMail: set this to [true] if you want to send an email verification code to user
   Future<User?> createUserWithEmailAndPassword({
     required String email,
     required String password,
@@ -96,13 +89,14 @@ class FireAuth {
     return user;
   }
 
+  /// Attempts to sign in a user with the given email address and password.
   ///
-  /// [signInWithEmailAndPassword] Function parameters:
-  ///   1) email --> Required
-  ///   2) password --> Required
-  ///   3) checkIfEmailIsVerified --> Optional(false by default)
+  /// **Important**: You must enable Email & Password accounts in the Auth
+  /// section of the Firebase console before being able to use them.
   ///
-
+  /// Other parameters include:
+  ///   1) checkIfEmailIsVerified: set this to [true] if you want to check if the user
+  /// email is verified before signing them in
   Future<User?> signInWithEmailAndPassword({
     required String email,
     required String password,
@@ -134,28 +128,42 @@ class FireAuth {
     return null;
   }
 
+  ///Sends a verification email to the current user
   Future<void> sendEmailVerification() async {
     User? user = _firebaseAuth.currentUser;
     user?.sendEmailVerification();
   }
 
+  /// Checks if the email of current user is verified
   Future<bool> isEmailVerified() async {
     User? user = _firebaseAuth.currentUser;
     return user?.emailVerified ?? false;
   }
 
+  /// Sends a password reset email to the given email address.
   ///
-  /// [resetPassword] Function parameters:
-  ///   1) email --> Required
-  ///
+  /// To complete the password reset, call [confirmPasswordReset] with the code supplied in the email sent to the user, along with the new password specified by the user.
   Future<void> resetPassword(String email) async {
     await _firebaseAuth.sendPasswordResetEmail(email: email);
   }
 
-  Future<void> deleteAccount() async {
+  /// Deletes and signs out the user.
+  ///
+  /// **Important**: this is a security-sensitive operation that requires the
+  /// user to have recently signed in.
+  Future<void> deleteAccount(String password) async {
     var currentUser = _firebaseAuth.currentUser;
-    //TODO delete data from database
-    currentUser?.delete();
+    if (currentUser != null) {
+      final credential = EmailAuthProvider.credential(
+          email: currentUser.email!, password: password);
+      await currentUser
+          .reauthenticateWithCredential(credential)
+          .catchError((err) {
+        log.e('@deleteAccount Error: $err');
+      });
+      //TODO delete data from database
+      currentUser.delete();
+    }
   }
 
   //TODO implement signIn with Google
