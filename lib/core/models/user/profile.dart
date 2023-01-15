@@ -52,12 +52,13 @@ class UserProfile {
 
   deepCopy() {
     return UserProfile(
-        name: name,
-        email: email,
-        fcmToken: fcmToken,
-        phone: phone,
-        imageUrl: imageUrl,
-        gender: gender,
-        location: location);
+      name: name,
+      email: email,
+      fcmToken: fcmToken,
+      phone: phone,
+      imageUrl: imageUrl,
+      gender: gender,
+      location: location,
+    );
   }
 }

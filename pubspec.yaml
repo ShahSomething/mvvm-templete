@@ -43,6 +43,7 @@ dependencies:
   url_launcher: ^6.1.7
   cupertino_icons: ^1.0.5
   firebase_messaging_platform_interface: ^4.2.10
+  firebase_auth: ^4.2.5
 
 dev_dependencies:
   flutter_test:
