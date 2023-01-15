@@ -44,6 +44,8 @@ dependencies:
   cupertino_icons: ^1.0.5
   firebase_messaging_platform_interface: ^4.2.10
   firebase_auth: ^4.2.5
+  cloud_firestore: ^4.3.1
+  firebase_storage: ^11.0.10
 
 dev_dependencies:
   flutter_test:

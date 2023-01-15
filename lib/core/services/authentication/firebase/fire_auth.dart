@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
 import 'package:mvvm_template/core/others/logger_customization/custom_logger.dart';
-import 'package:mvvm_template/core/services/device_info_service.dart';
+import 'package:mvvm_template/core/services/database/firestore/firebase_db_service.dart';
 import 'package:mvvm_template/core/services/notification_service.dart';
 import 'package:mvvm_template/locator.dart';
 
@@ -33,16 +33,18 @@ class FireAuth {
   FirebaseAuth get firebaseAuth => _firebaseAuth;
   User? get currentUser => _firebaseAuth.currentUser;
 
+  final _dbService = locator<FirebaseService>();
+
   /// Updates the fcm token
   _updateFcmToken() async {
     final fcmToken = await locator<NotificationsService>().getFcmToken();
-    final deviceId = await DeviceInfoService().getDeviceId();
-    //TODO update fcm in database
+    //final deviceId = await DeviceInfoService().getDeviceId();
+    await _dbService.updateFCMToken(currentUser!.uid, fcmToken!);
   }
 
   ///Signs out the current user.
   Future<void> signOut() async {
-    //TODO clear fcm token
+    _dbService.updateFCMToken(currentUser!.uid, null);
     return _firebaseAuth.signOut();
   }
 
@@ -74,17 +76,17 @@ class FireAuth {
         try {
           await user?.sendEmailVerification();
         } catch (e) {
-          log.e("the exception is $e");
+          log.e("@createUserWithEmailAndPassword: $e");
         }
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        log.e('Weak Password');
+        log.e('@createUserWithEmailAndPassword: Weak Password');
       } else if (e.code == 'email-already-in-use') {
-        log.e('Email already in use');
+        log.e('@createUserWithEmailAndPassword: Email already in use');
       }
     } catch (e) {
-      log.e("the exception is $e");
+      log.e("@createUserWithEmailAndPassword: $e");
     }
     return user;
   }
@@ -110,18 +112,19 @@ class FireAuth {
       _updateFcmToken();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        log.e("User not found");
+        log.e("@signInWithEmailAndPassword: User not found");
       } else if (e.code == 'wrong-password') {
-        log.e("Wrong password");
+        log.e("@signInWithEmailAndPassword: Wrong password");
       } else {
-        log.wtf("the exception is $e");
+        log.wtf("@signInWithEmailAndPassword: the exception is $e");
       }
     }
     if (user != null) {
       if (checkIfEmailIsVerified && user.emailVerified) {
         return user;
       } else {
-        log.i('Account not verified through e-mail');
+        log.i(
+            '@signInWithEmailAndPassword: Account not verified through e-mail');
         return null;
       }
     }
@@ -161,7 +164,7 @@ class FireAuth {
           .catchError((err) {
         log.e('@deleteAccount Error: $err');
       });
-      //TODO delete data from database
+      _dbService.deleteUserData(currentUser.uid);
       currentUser.delete();
     }
   }

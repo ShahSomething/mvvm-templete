@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart' as dio;
 
 class UserProfile {
+  String? uid;
   String? name;
   String? email;
   String? fcmToken;
@@ -12,18 +13,18 @@ class UserProfile {
   String? mobile;
   String? dob;
 
-  UserProfile({
-    this.name,
-    this.email,
-    this.fcmToken,
-    this.emailVerifiedAt,
-    this.phone,
-    this.imageUrl,
-    this.gender,
-    this.location,
-    this.mobile,
-    this.dob,
-  });
+  UserProfile(
+      {this.name,
+      this.email,
+      this.fcmToken,
+      this.emailVerifiedAt,
+      this.phone,
+      this.imageUrl,
+      this.gender,
+      this.location,
+      this.mobile,
+      this.dob,
+      this.uid});
 
   UserProfile.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -35,6 +36,7 @@ class UserProfile {
     gender = json['gender'];
     location = json['location'];
     dob = json['dob'];
+    uid = json['uid'];
   }
 
   Future<Map<String, dynamic>> toJson() async {
@@ -47,6 +49,7 @@ class UserProfile {
         imageUrl != null ? await dio.MultipartFile.fromFile(imageUrl!) : null;
     data['gender'] = gender;
     data['location'] = location;
+    data['uid'] = uid;
     return data;
   }
 
