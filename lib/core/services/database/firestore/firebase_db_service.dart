@@ -19,15 +19,16 @@ class FirebaseService {
   final CollectionReference complainsReference =
       FirebaseFirestore.instance.collection('Complains');
 
-  ///Uploads the [UserProfile] data to the users collection
+  ///Uploads the [UserProfile] data to the users collection and returns docId
   ///
   ///**Important**: This function assumes that you have not set the uid
   ///for the user, it creates a document first, fetches the id of the document,
   ///assigns the docId to the uid and then uploads the data to the newly created document
-  Future<void> uploadUserData(UserProfile user) async {
+  Future<String> uploadUserData(UserProfile user) async {
     var docRef = usersReference.doc();
     user.uid = docRef.id;
     await usersReference.doc(user.uid).set(user.toJson());
+    return docRef.id;
   }
 
   ///Updates the [fields] provided to the function for the given user

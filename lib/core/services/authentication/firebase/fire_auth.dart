@@ -146,8 +146,21 @@ class FireAuth {
   /// Sends a password reset email to the given email address.
   ///
   /// To complete the password reset, call [confirmPasswordReset] with the code supplied in the email sent to the user, along with the new password specified by the user.
-  Future<void> resetPassword(String email) async {
-    await _firebaseAuth.sendPasswordResetEmail(email: email);
+  Future<bool> resetPassword(String email) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+      return true;
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'auth/invalid-email':
+          log.i('@resetPassword: Invalid Email');
+          break;
+        case 'auth/user-not-found':
+          log.i('@resetPassword: User not found');
+          break;
+      }
+      return false;
+    }
   }
 
   /// Deletes and signs out the user.
