@@ -35,12 +35,14 @@ class LocalStorageService {
     _preferences = await SharedPreferences.getInstance();
   }
 
+  ///gets the value of [key] from disk
   dynamic _getFromDisk(String key) {
     var value = _preferences!.get(key);
     log.d('@_getFromDisk. key: $key value: $value');
     return value;
   }
 
+  ///saves the [content] to disk with the given [key]
   void _saveToDisk<T>(String key, T? content) {
     log.d('@_saveToDisk. key: $key value: $content');
 

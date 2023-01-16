@@ -4,32 +4,31 @@ import 'package:flutter/material.dart';
 import 'package:heic_to_jpg/heic_to_jpg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
+import 'package:mvvm_template/core/others/logger_customization/custom_logger.dart';
 import 'package:path/path.dart' as p;
 
 class FilePickerService {
   File? selectedImage;
   final _imagePicker = ImagePicker();
-  final Logger log = Logger();
+  final Logger log = CustomLogger(className: 'FilePickerService');
 
   Future<File?> pickImage() async {
     return await pickImageWithoutCompression();
   }
 
-  Future<File?> pickImageWithCompression() async {
+  ///picks an image from gallery and returns a compressed [File]
+  Future<File?> pickImageWithCompression({int imageQuality = 50}) async {
     File? selectedImage;
-    final image50 = await _imagePicker.pickImage(
-        source: ImageSource.gallery, imageQuality: 40);
-    final image100 = await _imagePicker.pickImage(
-        source: ImageSource.gallery, imageQuality: 100);
-    if (image50 != null) selectedImage = File(image50.path);
+    final image = await _imagePicker.pickImage(
+        source: ImageSource.gallery, imageQuality: imageQuality);
+    if (image != null) selectedImage = File(image.path);
 
-    log.d('Image50 Size: ${await image50?.length()}');
-    log.d('Image100 Size: ${await image100?.length()}');
-
+    log.d('@pickImageWithCompression: Image Size: ${await image?.length()}');
     return selectedImage;
   }
 
-  pickImageWithoutCompression() async {
+  ///picks an image from gallery and returns a [File] without compression
+  Future<File?> pickImageWithoutCompression() async {
     File? selectedImage;
     final filePicker = FilePicker.platform;
     FilePickerResult? result = await filePicker.pickFiles(

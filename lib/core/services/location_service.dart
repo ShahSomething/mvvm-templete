@@ -3,14 +3,16 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
+import 'package:mvvm_template/core/others/logger_customization/custom_logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class LocationService {
   Position? currentLocation;
   double? latitude;
   double? longitude;
-  final Logger log = Logger();
+  final Logger log = CustomLogger(className: 'LocationService');
 
+  ///returns [Position] for the current location
   Future<Position?> getCurrentLocation() async {
     currentLocation = await Geolocator.getCurrentPosition();
     if (currentLocation == null) {
@@ -22,6 +24,7 @@ class LocationService {
     return currentLocation;
   }
 
+  ///checks the location permission and requests permission if not granted
   checkPermissionStatus() async {
     LocationPermission permission = await checkPermissionStatus();
     if (permission == LocationPermission.denied ||
@@ -45,6 +48,7 @@ class LocationService {
     }
   }
 
+  ///returns the address for the provided [LatLng]
   Future<String> getAddressFromLatLng(LatLng? location) async {
     try {
       List<Placemark> placeMarks = await placemarkFromCoordinates(

@@ -6,6 +6,7 @@ class Config {
   final String _testBaseUrl = '';
   final String _productionBaseUrl = '';
   late String _baseUrl;
+  
 
   /// Getters
   Env get env => _env;

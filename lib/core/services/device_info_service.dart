@@ -4,6 +4,8 @@ import 'package:device_info/device_info.dart';
 
 class DeviceInfoService {
   final deviceInfo = DeviceInfoPlugin();
+
+  ///returns the device id
   Future<String> getDeviceId() async {
     if (Platform.isIOS) {
       var iosDeviceInfo = await deviceInfo.iosInfo;
