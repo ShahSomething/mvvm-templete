@@ -182,6 +182,41 @@ class FireAuth {
     }
   }
 
+  /// Changes the password for current User.
+  ///
+  /// **Important**: this is a security-sensitive operation that requires the
+  /// user to have recently signed in.
+  Future<bool> changePassword(
+      String currentPassword, String newPassword) async {
+    try {
+      final credential = EmailAuthProvider.credential(
+          email: currentUser!.email!, password: currentPassword);
+      await currentUser!
+          .reauthenticateWithCredential(credential)
+          .catchError((err) {
+        throw err;
+      });
+      await currentUser!.updatePassword(newPassword);
+      // Password update successful, show success message and reset form
+      return true;
+    } catch (error) {
+      // Password update failed, show error message
+      if (error is FirebaseAuthException) {
+        if (error.code == 'weak-password') {
+          // Show error message for weak password
+          log.e('@changePassword: Weak Password');
+        } else if (error.code == 'wrong-password') {
+          // Show error message for incorrect current password
+          log.e('@changePassword: Wrong Password');
+        } else {
+          // Show generic error message
+          log.e('@changePassword: $error');
+        }
+      }
+    }
+    return false;
+  }
+
   //TODO implement signIn with Google
 
   //TODO implement signIn with Facebook
