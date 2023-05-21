@@ -8,6 +8,7 @@ import 'package:mvvm_template/core/services/database/custom%20backend/database_s
 import 'package:mvvm_template/core/services/database/firestore/firebase_db_service.dart';
 import 'package:mvvm_template/core/services/file_picker_service.dart';
 import 'package:mvvm_template/core/services/local_storage_service.dart';
+import 'package:mvvm_template/core/services/location_service.dart';
 import 'package:mvvm_template/core/services/notification_service.dart';
 
 GetIt locator = GetIt.instance;
@@ -25,7 +26,7 @@ setupLocator(Env env) async {
   locator.registerSingleton<ApiServices>(ApiServices());
   locator.registerLazySingleton<DatabaseService>(() => DatabaseService());
   locator.registerLazySingleton<FirebaseService>(() => FirebaseService());
-  locator.registerSingleton(LocalStorageService());
+  locator.registerSingleton(LocationService());
   locator.registerSingleton<AuthService>(AuthService());
   locator.registerSingleton<FireAuth>(FireAuth());
   locator.registerLazySingleton(() => FilePickerService());

@@ -1,17 +1,15 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:mvvm_template/core/Routes/routes.dart';
+import 'package:mvvm_template/core/constants/my_utils.dart';
 import 'package:mvvm_template/core/models/other/onboarding.dart';
 import 'package:mvvm_template/core/others/logger_customization/custom_logger.dart';
 import 'package:mvvm_template/core/services/authentication/custom%20backend/auth_service.dart';
 import 'package:mvvm_template/core/services/local_storage_service.dart';
-import 'package:mvvm_template/core/services/notification_service.dart';
+import 'package:mvvm_template/core/services/navigation_service.dart';
 import 'package:mvvm_template/locator.dart';
 import 'package:mvvm_template/ui/custom_widgets/dialogs/network_error_dialog.dart';
-import 'package:mvvm_template/ui/screens/authentication/login_screen/login_screen.dart';
-import 'package:mvvm_template/ui/screens/navigation/navigation_screen.dart';
-import 'package:mvvm_template/ui/screens/onboarding/onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -23,7 +21,8 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   final _authService = locator<AuthService>();
   final _localStorageService = locator<LocalStorageService>();
-  final _notificationService = locator<NotificationsService>();
+  // final _notificationService = locator<NotificationsService>();
+  final _navigationService = locator<NavigationService>();
   List<Onboarding> onboardingList = [];
   final Logger log = CustomLogger(className: 'Splash Screen');
 
@@ -42,14 +41,14 @@ class _SplashScreenState extends State<SplashScreen> {
     ///
     final connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
-      Get.dialog(const NetworkErrorDialog());
+      MyUtils.myShowDialog(const NetworkErrorDialog());
       return;
     }
 
-    ///
-    ///initializing notification services
-    ///
-    await _notificationService.initConfigure();
+    // ///
+    // ///initializing notification services
+    // ///
+    // await _notificationService.initConfigure();
 
     ///
     /// Use the below [_getOnboardingData] method if the
@@ -69,10 +68,14 @@ class _SplashScreenState extends State<SplashScreen> {
       ///
       final List<Image> preCachedImages =
           await _preCacheOnboardingImages(onboardingList);
-      await Get.to(() => OnboardingScreen(
-          currentIndex: _localStorageService.onBoardingPageCount,
+      _navigationService.navigateTo(
+        AppRoutes.onboardingRoute,
+        arguments: (
           onboardingList: onboardingList,
-          preCachedImages: preCachedImages));
+          preCachedImages: preCachedImages,
+          currentIndex: _localStorageService.onBoardingPageCount
+        ),
+      );
       return;
     }
     await _authService.doSetup();
@@ -82,9 +85,9 @@ class _SplashScreenState extends State<SplashScreen> {
     ///
     log.d('@_initialSetup. Login State: ${_authService.isLogin}');
     if (_authService.isLogin) {
-      Get.off(() => const NavigationScreen());
+      _navigationService.navigateTo(AppRoutes.navigationRoute);
     } else {
-      Get.off(() => LoginScreen());
+      _navigationService.navigateTo(AppRoutes.loginRoute);
     }
   }
 

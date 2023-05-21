@@ -65,6 +65,17 @@ class FirebaseService {
     return result;
   }
 
+  ///Returns a [Stream] of [UserProfile] for the given [uid]
+  Stream<UserProfile> getUserDataStream(String uid) {
+    Stream<DocumentSnapshot<Object?>> stream =
+        usersReference.doc(uid).snapshots();
+
+    var result = stream.map((docSnap) =>
+        UserProfile.fromJson(docSnap.data() as Map<String, dynamic>));
+
+    return result;
+  }
+
   ///Uploads the [file] to the given [path] in [FirebaseStorage] and
   ///returns the downloadUrl for the [file]
   Future<String> uploadFile(File file, String path) async {

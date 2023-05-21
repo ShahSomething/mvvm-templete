@@ -3,7 +3,9 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  awesome_notifications
   connectivity_plus
+  firebase_core
   geolocator_windows
   modal_progress_hud_nsn
   permission_handler_windows

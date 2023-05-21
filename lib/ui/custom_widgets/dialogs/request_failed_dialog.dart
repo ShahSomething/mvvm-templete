@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class RequestFailedDialog extends StatelessWidget {
   final String errorMessage;
@@ -10,14 +9,14 @@ class RequestFailedDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('requestFailedTitle'.tr),
+      title: const Text('requestFailedTitle'),
       content: Text(errorMessage),
       actions: [
         ElevatedButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('ok'.tr),
+          child: const Text('ok'),
         ),
       ],
     );

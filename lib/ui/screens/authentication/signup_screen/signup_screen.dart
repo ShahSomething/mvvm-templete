@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:mvvm_template/core/constants/strings.dart';
+import 'package:mvvm_template/core/constants/my_utils.dart';
 import 'package:mvvm_template/core/enums/view_state.dart';
 import 'package:mvvm_template/ui/custom_widgets/gender_radio_group.dart';
 import 'package:mvvm_template/ui/custom_widgets/image_container.dart';
@@ -146,10 +145,10 @@ class SignUpScreen extends StatelessWidget {
 //                          crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
                                     /// Contain Facebook, google, apple sign Button
-                                    Row(
+                                    const Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                      children: const [
+                                      children: [
                                         // SocialAuthButtons(),
                                       ],
                                     ),
@@ -171,16 +170,9 @@ class SignUpScreen extends StatelessWidget {
                                         model.userProfile.name = val;
                                       },
                                       hintText: "Username",
-                                      prefixIcon: ImageContainer(
-                                        width: 22.w,
-                                        height: 22.h,
-                                        assets:
-                                            "${staticAssetsPath}user_field_icon.png",
-                                        fit: BoxFit.contain,
-                                      ),
                                     ),
 
-                                    const SizedBox(height: 24),
+                                    20.verticalSpace,
 
                                     /// Password field
                                     CustomTextField(
@@ -200,7 +192,7 @@ class SignUpScreen extends StatelessWidget {
                                         // model.userProfile.password = val;
                                       },
                                       hintText: "Password",
-                                      suffixIcon: IconButton(
+                                      suffix: IconButton(
                                         icon: Icon(
                                           model.passwordVisibility
                                               ? Icons.visibility_off
@@ -212,13 +204,6 @@ class SignUpScreen extends StatelessWidget {
                                           model.togglePasswordVisibility();
                                         },
                                       ),
-                                      prefixIcon: ImageContainer(
-                                        width: 22.w,
-                                        height: 22.h,
-                                        assets:
-                                            "${staticAssetsPath}pasword_field_icon.png",
-                                        fit: BoxFit.contain,
-                                      ),
                                     ),
 
                                     const SizedBox(height: 24),
@@ -227,7 +212,8 @@ class SignUpScreen extends StatelessWidget {
                                     CustomTextField(
                                       controller: model.emailController,
                                       validator: (val) {
-                                        if (!val.toString().trim().isEmail) {
+                                        if (!MyUtils.isEmail(
+                                            val.toString().trim())) {
                                           return 'Please Enter a Valid Email';
                                         } else {
                                           return null;
@@ -238,16 +224,9 @@ class SignUpScreen extends StatelessWidget {
                                         model.userProfile.email = val;
                                       },
                                       hintText: "Email",
-                                      prefixIcon: ImageContainer(
-                                        width: 22.w,
-                                        height: 22.h,
-                                        assets:
-                                            "${staticAssetsPath}mail_field_icon.png",
-                                        fit: BoxFit.contain,
-                                      ),
                                     ),
 
-                                    const SizedBox(height: 24),
+                                    20.verticalSpace,
 
                                     /// location field
                                     CustomTextField(
@@ -264,16 +243,9 @@ class SignUpScreen extends StatelessWidget {
                                         model.userProfile.location = val;
                                       },
                                       hintText: "Location",
-                                      prefixIcon: ImageContainer(
-                                        width: 22.w,
-                                        height: 22.h,
-                                        assets:
-                                            "${staticAssetsPath}location_field_icon.png",
-                                        fit: BoxFit.contain,
-                                      ),
                                     ),
 
-                                    const SizedBox(height: 16),
+                                    16.verticalSpace,
 
                                     /// Row Contain Is Remind radio button
                                     Padding(

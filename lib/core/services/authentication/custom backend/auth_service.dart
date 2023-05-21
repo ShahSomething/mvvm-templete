@@ -9,7 +9,6 @@ import 'package:mvvm_template/core/others/logger_customization/custom_logger.dar
 import 'package:mvvm_template/core/services/database/custom%20backend/database_service.dart';
 import 'package:mvvm_template/core/services/device_info_service.dart';
 import 'package:mvvm_template/core/services/local_storage_service.dart';
-import 'package:mvvm_template/core/services/notification_service.dart';
 import 'package:mvvm_template/locator.dart';
 
 ///
@@ -68,7 +67,7 @@ class AuthService {
   /// Updating FCM Token here...
   ///
   _updateFcmToken() async {
-    final fcmToken = await locator<NotificationsService>().getFcmToken();
+    //final fcmToken = await locator<NotificationsService>().getFcmToken();
     final deviceId = await DeviceInfoService().getDeviceId();
     final response = await _dbService.updateFcmToken(deviceId, fcmToken!);
     if (response.success) {

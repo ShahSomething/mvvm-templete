@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mvvm_template/core/constants/colors.dart';
+import 'package:mvvm_template/core/theme/app_colors.dart';
 
 class CustomSingleRadioButton extends StatelessWidget {
   final bool isSelected;
@@ -27,7 +27,8 @@ class CustomSingleRadioButton extends StatelessWidget {
             width: 10,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
-                color: isSelected ? primaryColor : Colors.transparent),
+                color:
+                    isSelected ? AppColors.primaryColor : Colors.transparent),
           ),
         ),
       ),

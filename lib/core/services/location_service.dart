@@ -1,9 +1,10 @@
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:mvvm_template/core/others/logger_customization/custom_logger.dart';
+// import 'package:mvvm_template/core/services/navigation_service.dart';
+// import 'package:mvvm_template/locator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class LocationService {
@@ -11,13 +12,14 @@ class LocationService {
   double? latitude;
   double? longitude;
   final Logger log = CustomLogger(className: 'LocationService');
+  //final NavigationService _navigationScreen = locator<NavigationService>();
 
   ///returns [Position] for the current location
   Future<Position?> getCurrentLocation() async {
     currentLocation = await Geolocator.getCurrentPosition();
     if (currentLocation == null) {
       await checkPermissionStatus();
-      await checkGpsService();
+      //await checkGpsService();
     }
     log.d(
         'Latitude: ${currentLocation!.latitude}, Longitude: ${currentLocation!.longitude}');
@@ -33,20 +35,20 @@ class LocationService {
     }
   }
 
-  checkGpsService() async {
-    if (await Geolocator.isLocationServiceEnabled()) {
-      Get.defaultDialog(
-          title: 'GPS is Disabled',
-          middleText: 'Please turn on your GPS Location',
-          textConfirm: 'TURN ON',
-          onConfirm: () async {
-            await Geolocator.openLocationSettings();
-            Get.back();
-          },
-          textCancel: 'Skip',
-          onCancel: () {});
-    }
-  }
+  // checkGpsService() async {
+  //   if (await Geolocator.isLocationServiceEnabled()) {
+  //     Get.defaultDialog(
+  //         title: 'GPS is Disabled',
+  //         middleText: 'Please turn on your GPS Location',
+  //         textConfirm: 'TURN ON',
+  //         onConfirm: () async {
+  //           await Geolocator.openLocationSettings();
+  //           Get.back();
+  //         },
+  //         textCancel: 'Skip',
+  //         onCancel: () {});
+  //   }
+  // }
 
   ///returns the address for the provided [LatLng]
   Future<String> getAddressFromLatLng(LatLng? location) async {

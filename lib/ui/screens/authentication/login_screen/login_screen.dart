@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
+import 'package:mvvm_template/core/Routes/routes.dart';
+import 'package:mvvm_template/core/constants/my_utils.dart';
 import 'package:mvvm_template/core/enums/view_state.dart';
 import 'package:mvvm_template/ui/custom_widgets/text_fields/custom_text_field.dart';
-import 'package:mvvm_template/ui/screens/authentication/forget_password/forget_password_screen.dart';
 import 'package:mvvm_template/ui/screens/authentication/login_screen/login_view_model.dart';
-import 'package:mvvm_template/ui/screens/authentication/signup_screen/signup_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class LoginScreen extends StatelessWidget {
-  final _formKey = GlobalKey<FormState>();
-
-  LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -43,8 +40,8 @@ class LoginScreen extends StatelessWidget {
                               color: Colors.white,
                               border:
                                   Border.all(color: Colors.white, width: 0.0)),
-                          child: Column(
-                            children: const [
+                          child: const Column(
+                            children: [
                               SizedBox(height: 60),
 
                               ///
@@ -89,15 +86,15 @@ class LoginScreen extends StatelessWidget {
                                 topLeft: Radius.circular(24),
                               )),
                               child: Form(
-                                key: _formKey,
+                                key: model.formKey,
                                 child: Column(
 //                          crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
                                     /// Contain Facebook, google, apple sign Button
-                                    Row(
+                                    const Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                      children: const [
+                                      children: [
                                         // SocialAuthButtons(),
                                       ],
                                     ),
@@ -111,7 +108,8 @@ class LoginScreen extends StatelessWidget {
                                         controller: model.emailController,
                                         onTap: () {},
                                         validator: (val) {
-                                          if (!val.toString().trim().isEmail) {
+                                          if (!MyUtils.isEmail(
+                                              val.toString().trim())) {
                                             return 'Please Enter a Valid Email';
                                           } else {
                                             return null;
@@ -121,7 +119,7 @@ class LoginScreen extends StatelessWidget {
                                           //model.loginBody.email = val;
                                         },
                                         hintText: "Username",
-                                        prefixIcon: const Icon(Icons.person)
+                                        prefix: const Icon(Icons.person)
                                         //  ImageContainer(
                                         //   width: 22.w,
                                         //   height: 22.h,
@@ -153,7 +151,7 @@ class LoginScreen extends StatelessWidget {
                                           //model.loginBody.password = val;
                                         },
                                         hintText: "Password",
-                                        suffixIcon: IconButton(
+                                        suffix: IconButton(
                                           icon: Icon(
                                             model.passwordVisibility
                                                 ? Icons.visibility_off
@@ -165,7 +163,7 @@ class LoginScreen extends StatelessWidget {
                                             model.togglePasswordVisibility();
                                           },
                                         ),
-                                        prefixIcon: const Icon(Icons.password)
+                                        prefix: const Icon(Icons.password)
                                         // ImageContainer(
                                         //   width: 22.w,
                                         //   height: 22.h,
@@ -211,8 +209,8 @@ class LoginScreen extends StatelessWidget {
                                         const Spacer(),
                                         InkWell(
                                           onTap: () {
-                                            Get.to(
-                                                const ForgetPasswordScreen());
+                                            model.navigateTo(
+                                                AppRoutes.forgotPasswordRoute);
                                           },
                                           child: const Text(
                                             "Forget Password",
@@ -236,7 +234,8 @@ class LoginScreen extends StatelessWidget {
                                       alignment: Alignment.centerRight,
                                       child: InkWell(
                                         onTap: () {
-                                          Get.to(SignUpScreen());
+                                          model.navigateTo(
+                                              AppRoutes.signUpRoute);
                                         },
                                         child: const Text(
                                           "Register",

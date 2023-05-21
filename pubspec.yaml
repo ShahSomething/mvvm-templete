@@ -5,7 +5,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.18.2 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   flutter:
@@ -14,7 +14,6 @@ dependencies:
   carousel_slider: ^4.0.0-nullsafety.0
   connectivity_plus: ^3.0.2
   device_info: ^2.0.3
-  device_preview: ^1.1.0
   dio: ^4.0.6
   file_picker: ^5.2.5
   firebase_core: ^2.4.1
@@ -28,12 +27,11 @@ dependencies:
   flutter_svg: ^1.1.6
   geocoding: ^2.0.5
   geolocator: ^9.0.2
-  get: ^4.6.5
   get_it: ^7.2.0
   google_maps_flutter: ^2.2.3
   heic_to_jpg: ^0.2.0
   image_picker: ^0.8.6
-  intl: ^0.17.0
+  intl: ^0.18.0
   logger: ^1.1.0
   modal_progress_hud_nsn: ^0.3.0
   permission_handler: ^10.2.0
@@ -47,6 +45,11 @@ dependencies:
   cloud_firestore: ^4.3.1
   firebase_storage: ^11.0.10
   path: ^1.8.2
+  awesome_notifications: ^0.7.4+1
+  path_provider: ^2.0.15
+  image_cropper: ^4.0.1
+  google_fonts: ^4.0.4
+  control_style: ^0.0.3
 
 dev_dependencies:
   flutter_test:

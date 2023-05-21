@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class AuthDialog extends StatelessWidget {
   final String message;
@@ -18,7 +17,7 @@ class AuthDialog extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('ok'.tr),
+          child: const Text('ok'),
         ),
       ],
     );

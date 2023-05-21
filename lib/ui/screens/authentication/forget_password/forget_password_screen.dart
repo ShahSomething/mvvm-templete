@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:mvvm_template/core/constants/colors.dart';
 import 'package:mvvm_template/core/enums/view_state.dart';
+import 'package:mvvm_template/core/theme/app_colors.dart';
 import 'package:mvvm_template/ui/screens/authentication/forget_password/forget_password_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +17,7 @@ class ForgetPasswordScreen extends StatelessWidget {
           inAsyncCall: model.state == ViewState.busy,
           child: const SafeArea(
             child: Scaffold(
-              backgroundColor: scaffoldBackgroundColor,
+              backgroundColor: AppColors.backgoundColor,
 //               body: Stack(
 //                 children: [
 //                   Padding(

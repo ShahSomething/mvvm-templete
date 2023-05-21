@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mvvm_template/core/enums/view_state.dart';
+import 'package:mvvm_template/core/services/navigation_service.dart';
+import 'package:mvvm_template/locator.dart';
 import 'package:mvvm_template/ui/screens/pin_location/pin_location_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -64,7 +65,8 @@ class PinLocationScreen extends StatelessWidget {
                             child: ElevatedButton(
                               child: const Text('Confirm Location'),
                               onPressed: () {
-                                Get.back(result: model.selectedLocation);
+                                locator<NavigationService>()
+                                    .pop(model.selectedLocation);
                               },
                             ),
                           ),

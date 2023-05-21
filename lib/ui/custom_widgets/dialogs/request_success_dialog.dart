@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class RequestSuccessDialog extends StatelessWidget {
   final String successMsg;
@@ -10,14 +9,14 @@ class RequestSuccessDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('requestSuccessTitle'.tr),
+      title: const Text('requestSuccessTitle'),
       content: Text(successMsg),
       actions: [
         ElevatedButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('ok'.tr),
+          child: const Text('ok'),
         ),
       ],
     );

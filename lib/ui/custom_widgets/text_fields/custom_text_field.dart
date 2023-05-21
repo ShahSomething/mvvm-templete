@@ -1,46 +1,77 @@
+import 'package:control_style/control_style.dart';
 import 'package:flutter/material.dart';
+import 'package:mvvm_template/core/theme/app_colors.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController? controller;
+  final String? hintText;
+  final TextInputType? textInputType;
+  final String? Function(String?)? validator;
+  final Widget? prefix;
+  final Widget? suffix;
+  final BoxConstraints? prefixConstraints;
+  final BoxConstraints? suffixConstraints;
+  final int? maxLines;
+
   final bool? obscure;
   final String? errorText;
-  final String? hintText;
+  final double? borderRadius;
   final bool? enabled;
-  final Widget? suffixIcon;
-  final Widget? prefixIcon;
-  final String? Function(String?)? validator;
   final double? fontSize;
   final String? label;
+  final int? maxLength;
   final void Function(String?)? onSaved;
   final VoidCallback? onTap;
   final bool disableBorder;
   final void Function(String?)? onChanged;
-  const CustomTextField(
-      {Key? key,
-      this.controller,
-      this.onTap,
-      this.disableBorder = false,
-      this.label,
-      this.obscure = false,
-      this.enabled = true,
-      this.validator,
-      this.errorText,
-      this.fontSize = 15.0,
-      this.hintText,
-      this.onSaved,
-      this.suffixIcon,
-      @required this.prefixIcon,
-      this.onChanged})
-      : super(key: key);
+  final TextInputAction? textInputAction;
+  final void Function(String)? onFieldSubmitted;
+  final Color? fillColor;
+
+  const CustomTextField({
+    Key? key,
+    this.controller,
+    this.hintText,
+    this.textInputType,
+    this.obscure = false,
+    this.enabled = true,
+    this.validator,
+    this.prefix,
+    this.suffix,
+    this.prefixConstraints,
+    this.suffixConstraints,
+    this.borderRadius = 10,
+    this.maxLines = 1,
+    this.errorText,
+    this.fontSize = 14.0,
+    this.label,
+    this.maxLength,
+    this.onSaved,
+    this.onTap,
+    this.disableBorder = false,
+    this.onChanged,
+    this.textInputAction,
+    this.onFieldSubmitted,
+    this.fillColor = Colors.transparent,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       onChanged: onChanged,
       onTap: onTap,
       onSaved: onSaved,
+      cursorColor: AppColors.primaryColor,
       enabled: enabled,
+      textInputAction: textInputAction,
+      onFieldSubmitted: onFieldSubmitted,
       controller: controller,
+      maxLines: maxLines,
+      keyboardType: textInputType,
       obscureText: obscure!,
+      obscuringCharacter: '●',
+      maxLength: maxLength,
+      style: Theme.of(context).textTheme.labelMedium,
       validator: validator ??
           (value) {
             if (value != null) {
@@ -50,44 +81,64 @@ class CustomTextField extends StatelessWidget {
             }
           },
       decoration: InputDecoration(
-        fillColor: Colors.white,
+        // contentPadding: EdgeInsets.only(top: 16, left: 16, bottom: 16),
+        labelText: label,
+        fillColor: fillColor,
         filled: true,
-        prefixIconConstraints: const BoxConstraints(),
-        prefixIcon: Padding(
-          padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-          child: prefixIcon!,
+        counter: const Offstage(),
+        prefixIconConstraints: prefixConstraints,
+        prefixIcon: prefix != null
+            ? Padding(
+                padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                child: prefix!,
+              )
+            : null,
+        suffixIcon: suffix != null
+            ? Padding(
+                padding: const EdgeInsets.only(),
+                child: suffix,
+              )
+            : null,
+        suffixIconConstraints: suffixConstraints,
+        focusedBorder: DecoratedInputBorder(
+          child: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(borderRadius!),
+            borderSide: const BorderSide(
+              color: AppColors.primaryColor,
+            ),
+          ),
         ),
-        suffixIcon: Padding(
-            padding: const EdgeInsets.only(), child: suffixIcon ?? Container()),
-        suffixIconConstraints:
-            const BoxConstraints(maxHeight: 40, maxWidth: 50),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14.0),
-          borderSide: const BorderSide(width: 1.0),
+        enabledBorder: DecoratedInputBorder(
+          child: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(borderRadius!),
+            borderSide: const BorderSide(
+              color: AppColors.greyColor,
+            ),
+          ),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-              color: disableBorder
-                  ? Colors.transparent
-                  : const Color(0xFF686868).withOpacity(0.4)),
-          borderRadius: BorderRadius.circular(14.0),
+        disabledBorder: DecoratedInputBorder(
+          child: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(borderRadius!),
+            borderSide: const BorderSide(
+              color: Colors.grey,
+            ),
+          ),
         ),
-        disabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-              color: disableBorder
-                  ? Colors.transparent
-                  : const Color(0xFF686868).withOpacity(0.4)),
-          borderRadius: BorderRadius.circular(14.0),
+        border: DecoratedInputBorder(
+          child: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(borderRadius!),
+            borderSide: const BorderSide(
+              color: AppColors.errorColor,
+            ),
+          ),
         ),
-        border: OutlineInputBorder(
-          borderSide: BorderSide(
-              color: disableBorder
-                  ? Colors.transparent
-                  : const Color(0xFF686868).withOpacity(0.4)),
-          borderRadius: BorderRadius.circular(14.0),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 15,
         ),
-        contentPadding: const EdgeInsets.only(left: 21.0),
         hintText: hintText,
+        hintStyle: Theme.of(context).textTheme.labelMedium,
+        labelStyle: Theme.of(context).textTheme.labelMedium,
       ),
     );
   }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mvvm_template/ui/custom_widgets/single_radio_button.dart';
 
 class GenderRadioGroup extends StatelessWidget {
@@ -11,8 +10,8 @@ class GenderRadioGroup extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
-          "gender".tr,
+        const Text(
+          "gender",
           // style: textStyleWithHacenFont.copyWith(
           //     fontSize: ScreenUtil().setSp(12), color: Colors.white),
         ),
@@ -32,8 +31,8 @@ class GenderRadioGroup extends StatelessWidget {
             model.updateIndex(0);
           },
         ),
-        Text(
-          "male".tr,
+        const Text(
+          "male",
           // style: textStyleWithHacenFont.copyWith(
           //     fontSize: ScreenUtil().setSp(12), color: Colors.white),
         ),
@@ -53,8 +52,8 @@ class GenderRadioGroup extends StatelessWidget {
             model.updateIndex(1);
           },
         ),
-        Text(
-          "female".tr,
+        const Text(
+          "female",
           // style: textStyleWithHacenFont.copyWith(
           //     fontSize: ScreenUtil().setSp(12), color: Colors.white),
         ),

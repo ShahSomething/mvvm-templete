@@ -1,3 +1,5 @@
+// ignore_for_file: body_might_complete_normally_catch_error
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:mvvm_template/core/config/config.dart';
@@ -91,4 +93,6 @@ class ApiServices {
       return RequestResponse(false, error: 'Network Error');
     }
   }
+
+  //TODO add method for uploading files
 }

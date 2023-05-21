@@ -2,21 +2,23 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:mvvm_template/core/Routes/routes.dart';
+import 'package:mvvm_template/core/constants/my_utils.dart';
 import 'package:mvvm_template/core/enums/view_state.dart';
 import 'package:mvvm_template/core/models/user/profile.dart';
 import 'package:mvvm_template/core/others/base_view_model.dart';
 import 'package:mvvm_template/core/services/authentication/firebase/fire_auth.dart';
 import 'package:mvvm_template/core/services/database/firestore/firebase_db_service.dart';
 import 'package:mvvm_template/core/services/file_picker_service.dart';
+import 'package:mvvm_template/core/services/navigation_service.dart';
 import 'package:mvvm_template/locator.dart';
 import 'package:mvvm_template/ui/custom_widgets/dialogs/auth_dialog.dart';
-import 'package:mvvm_template/ui/screens/navigation/navigation_screen.dart';
 
 class SignUpViewModel extends BaseViewModel {
   final FireAuth _authService = locator<FireAuth>();
   final FirebaseService _dbService = locator<FirebaseService>();
   final FilePickerService _imagePickerService = locator<FilePickerService>();
+  final NavigationService _navigationService = locator<NavigationService>();
   int? selectedGenderIndex;
   UserProfile userProfile = UserProfile();
   File? image;
@@ -48,7 +50,7 @@ class SignUpViewModel extends BaseViewModel {
       password: passwordController.text,
     );
     if (user == null) {
-      Get.dialog(
+      MyUtils.myShowDialog(
         const AuthDialog(
             title: 'Error', message: 'Failed to create new account'),
       );
@@ -65,8 +67,7 @@ class SignUpViewModel extends BaseViewModel {
           },
         );
       }
-
-      Get.offAll(const NavigationScreen());
+      _navigationService.pushReplacementNamed(AppRoutes.navigationRoute);
     }
     setState(ViewState.idle);
   }

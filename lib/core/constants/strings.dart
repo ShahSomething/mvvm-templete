@@ -1,5 +1,5 @@
 //TODO put all the constant strings here
 
-const String staticAssetsPath = "assets/static_assets/";
+const String assetsPath = "assets";
 
-const welcomeMsg = 'Welcome to AppTex';
+const welcomeMsg = 'Welcome message';

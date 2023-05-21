@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:mvvm_template/core/services/localization_service.dart';
-import 'package:mvvm_template/ui/screens/splash_screen.dart';
+import 'package:mvvm_template/core/Routes/route_generator.dart';
+import 'package:mvvm_template/core/Routes/routes.dart';
+import 'package:mvvm_template/core/services/navigation_service.dart';
+import 'package:mvvm_template/core/theme/custom_theme.dart';
 
 class MyApp extends StatelessWidget {
   final String title;
@@ -15,11 +16,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: const Size(_designWidth, _designHeight),
-      builder: (context, widget) => GetMaterialApp(
-        translations: LocalizationService(),
+      builder: (context, widget) => MaterialApp(
+        navigatorKey: NavigationService.navigatorKey,
+        onGenerateRoute: RouteGenerator.generateRoute,
         locale: const Locale("en"),
         title: title,
-        home: const SplashScreen(),
+        theme: CustomTheme.lightTheme,
+        themeMode: ThemeMode.light,
+        initialRoute: AppRoutes.splashScreenRoute,
+        debugShowCheckedModeBanner: false,
       ),
     );
   }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mvvm_template/core/services/localization_service.dart';
 
 class Onboarding {
   late String? imgUrl;
@@ -9,7 +8,7 @@ class Onboarding {
 
   Onboarding.fromJson(json) {
     debugPrint('$json');
-    title = json[LocalizationService.getLocalizedKey('title')];
+    title = json['title'];
     imgUrl = json['image_url'];
   }
 }

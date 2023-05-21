@@ -1,8 +1,10 @@
+// ignore_for_file: body_might_complete_normally_catch_error
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
+import 'package:mvvm_template/core/constants/my_utils.dart';
 import 'package:mvvm_template/core/others/logger_customization/custom_logger.dart';
 import 'package:mvvm_template/core/services/database/firestore/firebase_db_service.dart';
-import 'package:mvvm_template/core/services/notification_service.dart';
 import 'package:mvvm_template/locator.dart';
 
 /// [FireAuth] class contains all authentication related logic with following
@@ -37,7 +39,7 @@ class FireAuth {
 
   /// Updates the fcm token
   _updateFcmToken() async {
-    final fcmToken = await locator<NotificationsService>().getFcmToken();
+    // final fcmToken = await locator<NotificationsService>().getFcmToken();
     //final deviceId = await DeviceInfoService().getDeviceId();
     await _dbService.updateFCMToken(currentUser!.uid, fcmToken!);
   }
@@ -68,7 +70,7 @@ class FireAuth {
       user = userCredential.user;
       if (user != null) {
         await user.updateDisplayName(name);
-        await _updateFcmToken();
+        //await _updateFcmToken();
         await user.reload();
       }
       user = _firebaseAuth.currentUser;
@@ -76,17 +78,23 @@ class FireAuth {
         try {
           await user?.sendEmailVerification();
         } catch (e) {
+          MyUtils.showErrorSnackBar('Auth Error', e.toString());
           log.e("@createUserWithEmailAndPassword: $e");
         }
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
+        MyUtils.showErrorSnackBar('Auth Error', "Weak Password");
         log.e('@createUserWithEmailAndPassword: Weak Password');
       } else if (e.code == 'email-already-in-use') {
+        MyUtils.showErrorSnackBar('Auth Error', "Email already in use");
         log.e('@createUserWithEmailAndPassword: Email already in use');
       }
+      return null;
     } catch (e) {
+      MyUtils.showErrorSnackBar('Auth Error', e.toString());
       log.e("@createUserWithEmailAndPassword: $e");
+      return null;
     }
     return user;
   }
@@ -112,17 +120,22 @@ class FireAuth {
       _updateFcmToken();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
+        MyUtils.showErrorSnackBar('Auth Error', "User not found");
         log.e("@signInWithEmailAndPassword: User not found");
       } else if (e.code == 'wrong-password') {
+        MyUtils.showErrorSnackBar('Auth Error', "Wrong Password");
         log.e("@signInWithEmailAndPassword: Wrong password");
       } else {
+        MyUtils.showErrorSnackBar('Auth Error', e.toString());
         log.wtf("@signInWithEmailAndPassword: the exception is $e");
       }
     }
     if (user != null) {
-      if (checkIfEmailIsVerified && user.emailVerified) {
+      if ((!checkIfEmailIsVerified) || user.emailVerified) {
         return user;
       } else {
+        MyUtils.showErrorSnackBar(
+            'Auth Error', "Account not verified through e-mail");
         log.i(
             '@signInWithEmailAndPassword: Account not verified through e-mail');
         return null;
@@ -153,9 +166,11 @@ class FireAuth {
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'auth/invalid-email':
+          MyUtils.showErrorSnackBar('Auth Error', "Invalid Email");
           log.i('@resetPassword: Invalid Email');
           break;
         case 'auth/user-not-found':
+          MyUtils.showErrorSnackBar('Auth Error', "User not found");
           log.i('@resetPassword: User not found');
           break;
       }
@@ -167,19 +182,23 @@ class FireAuth {
   ///
   /// **Important**: this is a security-sensitive operation that requires the
   /// user to have recently signed in.
-  Future<void> deleteAccount(String password) async {
+  Future<bool> deleteAccount(String password) async {
     var currentUser = _firebaseAuth.currentUser;
     if (currentUser != null) {
       final credential = EmailAuthProvider.credential(
-          email: currentUser.email!, password: password);
-      await currentUser
-          .reauthenticateWithCredential(credential)
-          .catchError((err) {
+          email: currentUser.email!, password: password.trim());
+      try {
+        await currentUser.reauthenticateWithCredential(credential);
+      } catch (err) {
+        MyUtils.showErrorSnackBar('Auth Error', err.toString());
         log.e('@deleteAccount Error: $err');
-      });
+        return false;
+      }
       _dbService.deleteUserData(currentUser.uid);
       currentUser.delete();
+      return true;
     }
+    return false;
   }
 
   /// Changes the password for current User.
@@ -204,13 +223,22 @@ class FireAuth {
       if (error is FirebaseAuthException) {
         if (error.code == 'weak-password') {
           // Show error message for weak password
-          log.e('@changePassword: Weak Password');
+          MyUtils.showErrorSnackBar(
+            'Weak Password',
+            'Please enter a strong password',
+          );
         } else if (error.code == 'wrong-password') {
           // Show error message for incorrect current password
-          log.e('@changePassword: Wrong Password');
+          MyUtils.showErrorSnackBar(
+            'Incorrect Password',
+            'Please enter correct password',
+          );
         } else {
           // Show generic error message
-          log.e('@changePassword: $error');
+          MyUtils.showErrorSnackBar(
+            'Error',
+            error.toString(),
+          );
         }
       }
     }
@@ -228,5 +256,4 @@ class FireAuth {
   //TODO implement signIn with Twitter
 
   //TODO implement signIn with Phone Number
-
 }
